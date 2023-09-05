@@ -1,8 +1,10 @@
 using CareerHub.gRPC.Services;
+using CareerHub.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddGrpc();
+builder.Services.AddInfrastructureServices(builder.Configuration);
 
 var app = builder.Build();
 
