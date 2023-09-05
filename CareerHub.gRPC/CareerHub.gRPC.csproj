@@ -13,6 +13,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CareerHub.Application\CareerHub.Application.csproj" />
+    <ProjectReference Include="..\CareerHub.Infrastructure\CareerHub.Infrastructure.csproj" />
     <ProjectReference Include="..\CareerHub.Shared\CareerHub.Shared.csproj" />
   </ItemGroup>
 
