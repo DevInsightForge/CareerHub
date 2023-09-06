@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace CareerHub.Application.Features.Authentication.Commands.RegisterUser
 {
-    public record RegisterUserCommand(UserRegistrationRequest Dto) : IRequest<UserResponse>
+    public partial record RegisterUserCommand : UserRegistrationRequest, IRequest<UserResponse>
     {
     }
 

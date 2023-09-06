@@ -3,6 +3,9 @@ using CareerHub.gRPC;
 using CareerHub.Infrastructure;
 using Serilog;
 using CareerHub.Application;
+using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +18,15 @@ builder.Services.AddApplicationServices()
     .AddInfrastructureServices(builder.Configuration);
 
 var app = builder.Build();
+
+app.UseExceptionHandler(appError =>
+{
+    appError.Run(async context =>
+    {
+        context.Response.ContentType = "application/grpc";
+        var contextFeature = context.Features.Get<IExceptionHandlerFeature>();
+    });
+});
 
 if (app.Environment.IsDevelopment())
 {
