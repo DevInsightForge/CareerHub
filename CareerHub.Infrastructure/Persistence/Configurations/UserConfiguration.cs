@@ -8,7 +8,7 @@ namespace CareerHub.Infrastructure.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<UserModel> builder)
         {
-            builder.ToTable("Users", "dbo");
+            builder.ToTable("Users");
 
             builder.HasKey(u => u.Id);
 

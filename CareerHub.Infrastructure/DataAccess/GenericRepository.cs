@@ -9,29 +9,34 @@ namespace CareerHub.Infrastructure.DataAccess
     public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : BaseEntity
     {
         protected readonly DbSet<TEntity> _dbSet;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public GenericRepository(DatabaseContext dbContext)
+        public GenericRepository(DatabaseContext dbContext, IUnitOfWork unitOfWork)
         {
             if (dbContext is null)
             {
                 throw new ArgumentNullException(nameof(dbContext));
             }
             _dbSet = dbContext.Set<TEntity>();
+            _unitOfWork = unitOfWork;
         }
 
-        public async Task AddAsync(TEntity entity)
+        public async Task AddAsync(TEntity entity, CancellationToken cancellationToken)
         {
             await _dbSet.AddAsync(entity);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
         }
 
-        public void Update(TEntity entity)
+        public async Task UpdateAsync(TEntity entity, CancellationToken cancellationToken)
         {
             _dbSet.Update(entity);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
         }
 
-        public async Task AddRangeAsync(IEnumerable<TEntity> entities)
+        public async Task AddRangeAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken)
         {
             await _dbSet.AddRangeAsync(entities);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
         }
 
         public async Task<TEntity?> GetByIdAsync(long id)

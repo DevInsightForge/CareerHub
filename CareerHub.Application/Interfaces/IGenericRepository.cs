@@ -1,17 +1,18 @@
-﻿using System.Linq.Expressions;
+﻿using CareerHub.Domain.Entities.Common;
+using System.Linq.Expressions;
 
 namespace CareerHub.Application.Interfaces
 {
-    public interface IGenericRepository<T> where T : class
+    public interface IGenericRepository<TEntity> where TEntity : BaseEntity
     {
-        Task AddAsync(T entity);
-        void Update(T entity);
-        Task AddRangeAsync(IEnumerable<T> entities);
-        Task<T?> GetByIdAsync(long id);
-        Task<IEnumerable<T>> GetAllAsync();
-        Task<TResult> MaxAsync<TResult>(Expression<Func<T, TResult>> where);
-        Task<T?> GetWhereAsync(Expression<Func<T, bool>> where, params Expression<Func<T, object>>[] include);
-        Task<bool> AnyAsync(Expression<Func<T, bool>> predicate);
-        Task<List<T>> GetAllAsync(Expression<Func<T, bool>> predicate);
+        Task AddAsync(TEntity entity, CancellationToken cancellationToken);
+        Task UpdateAsync(TEntity entity, CancellationToken cancellationToken);
+        Task AddRangeAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken);
+        Task<TEntity?> GetByIdAsync(long id);
+        Task<IEnumerable<TEntity>> GetAllAsync();
+        Task<TResult> MaxAsync<TResult>(Expression<Func<TEntity, TResult>> where);
+        Task<TEntity?> GetWhereAsync(Expression<Func<TEntity, bool>> where, params Expression<Func<TEntity, object>>[] include);
+        Task<bool> AnyAsync(Expression<Func<TEntity, bool>> predicate);
+        Task<List<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate);
     }
 }
