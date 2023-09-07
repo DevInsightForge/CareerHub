@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace CareerHub.Application.Features.Authentication.Commands.AuthenticateUser
 {
-    public record AuthenticateUserCommand(UserLoginRequest Credentials) : IRequest<UserResponse>
+    public record AuthenticateUserCommand(UserLoginRequest Input) : IRequest<UserResponse>
     {
     }
 
@@ -26,9 +26,9 @@ namespace CareerHub.Application.Features.Authentication.Commands.AuthenticateUse
 
         public async Task<UserResponse> Handle(AuthenticateUserCommand request, CancellationToken cancellationToken)
         {
-            UserModel? user = await _userRepository.GetWhereAsync(u => u.NormalizedEmail == request.Credentials.Email.ToUpperInvariant());
+            UserModel? user = await _userRepository.GetWhereAsync(u => u.NormalizedEmail == request.Input.Email.ToUpperInvariant());
 
-            if (user is null || _passwordHasher.VerifyHashedPassword(user, user.Password, request.Credentials.Password) != PasswordVerificationResult.Success)
+            if (user is null || _passwordHasher.VerifyHashedPassword(user, user.Password, request.Input.Password) != PasswordVerificationResult.Success)
             {
                 throw new Exception("Invalid Credentials!");
             }

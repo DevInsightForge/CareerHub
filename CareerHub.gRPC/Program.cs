@@ -19,15 +19,6 @@ builder.Services.AddApplicationServices()
 
 var app = builder.Build();
 
-app.UseExceptionHandler(appError =>
-{
-    appError.Run(async context =>
-    {
-        context.Response.ContentType = "application/grpc";
-        var contextFeature = context.Features.Get<IExceptionHandlerFeature>();
-    });
-});
-
 if (app.Environment.IsDevelopment())
 {
     app.MapGrpcReflectionService();

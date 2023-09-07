@@ -1,10 +1,15 @@
-﻿namespace CareerHub.gRPC
+﻿using CareerHub.gRPC.Extensions;
+
+namespace CareerHub.gRPC
 {
     public static class DependencyInjection
     {
         public static IServiceCollection AddgRPCServices(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddGrpc();
+            // Add services to the container.
+            services.AddGrpc(options => {
+                options.Interceptors.Add<ExceptionInterceptor>();
+            });
             services.AddGrpcReflection();
 
             return services;

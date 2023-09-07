@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace CareerHub.Application.Features.Authentication.Commands.RegisterUser
 {
-    public partial record RegisterUserCommand : UserRegistrationRequest, IRequest<UserResponse>
+    public partial record RegisterUserCommand(UserRegistrationRequest Input) : IRequest<UserResponse>
     {
     }
 
@@ -26,13 +26,13 @@ namespace CareerHub.Application.Features.Authentication.Commands.RegisterUser
 
         public async Task<UserResponse> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
         {
-            UserModel? existingUser = await _userRepository.GetWhereAsync(u => u.NormalizedEmail == request.Dto.Email.ToUpperInvariant());
+            UserModel? existingUser = await _userRepository.GetWhereAsync(u => u.NormalizedEmail == request.Input.Email.ToUpperInvariant());
 
             if (existingUser is not null)
-                throw new Exception($"User already exists with this email {request.Dto.Email}");
+                throw new Exception($"User already exists with this email {request.Input.Email}");
 
-            UserModel user = UserModel.CreateUser(request.Dto.Email);
-            user.SetPassword(_passwordHasher.HashPassword(user, request.Dto.Password));
+            UserModel user = UserModel.CreateUser(request.Input.Email);
+            user.SetPassword(_passwordHasher.HashPassword(user, request.Input.Password));
 
             await _userRepository.AddAsync(user, cancellationToken);
 

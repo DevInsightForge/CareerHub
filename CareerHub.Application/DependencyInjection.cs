@@ -1,7 +1,6 @@
 ﻿using FluentValidation.AspNetCore;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
-using Mapster;
 using Microsoft.AspNetCore.Identity;
 using MediatR;
 using CareerHub.Application.Behaviours;
@@ -27,7 +26,6 @@ namespace CareerHub.Application
             services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly);
 
             // Configure Mapster
-            TypeAdapterConfig.GlobalSettings.Default.NameMatchingStrategy(NameMatchingStrategy.Flexible);
             MappingConfigurations.ConfigureMappings();
 
             // Inject password hasher

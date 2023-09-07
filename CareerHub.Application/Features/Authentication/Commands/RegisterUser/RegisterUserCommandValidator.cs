@@ -7,11 +7,11 @@ namespace CareerHub.Application.Features.Authentication.Commands.RegisterUser
         public RegisterUserCommandValidator()
         {
 
-            RuleFor(command => command.Dto.Email)
+            RuleFor(command => command.Input.Email)
                 .NotEmpty().WithMessage("Email is required.")
                 .EmailAddress().WithMessage("Invalid email format.");
 
-            RuleFor(command => command.Dto.Password)
+            RuleFor(command => command.Input.Password)
                 .NotEmpty().WithMessage("Password is required.")
                 .Matches(@"[A-Z]").WithMessage("Password must contain at least one uppercase letter.")
                 .Matches(@"[a-z]").WithMessage("Password must contain at least one lowercase letter.")
