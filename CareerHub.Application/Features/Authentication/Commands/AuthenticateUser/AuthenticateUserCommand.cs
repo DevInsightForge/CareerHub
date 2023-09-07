@@ -1,17 +1,17 @@
 ﻿using CareerHub.Application.Interfaces;
 using CareerHub.Domain.Entities.User;
-using CareerHub.Shared.Protos;
-using Mapster;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 
 namespace CareerHub.Application.Features.Authentication.Commands.AuthenticateUser
 {
-    public record AuthenticateUserCommand(UserLoginRequest Input) : IRequest<UserResponse>
+    public record AuthenticateUserCommand : IRequest<UserModel>
     {
+        public string Email { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
     }
 
-    internal sealed class AuthenticateUserCommandHandler : IRequestHandler<AuthenticateUserCommand, UserResponse>
+    internal sealed class AuthenticateUserCommandHandler : IRequestHandler<AuthenticateUserCommand, UserModel>
     {
         private readonly IGenericRepository<UserModel> _userRepository;
         private readonly IPasswordHasher<UserModel> _passwordHasher;
@@ -24,11 +24,11 @@ namespace CareerHub.Application.Features.Authentication.Commands.AuthenticateUse
             _passwordHasher = passwordHasher;
         }
 
-        public async Task<UserResponse> Handle(AuthenticateUserCommand request, CancellationToken cancellationToken)
+        public async Task<UserModel> Handle(AuthenticateUserCommand request, CancellationToken cancellationToken)
         {
-            UserModel? user = await _userRepository.GetWhereAsync(u => u.NormalizedEmail == request.Input.Email.ToUpperInvariant());
+            UserModel? user = await _userRepository.GetWhereAsync(u => u.NormalizedEmail == request.Email.ToUpperInvariant());
 
-            if (user is null || _passwordHasher.VerifyHashedPassword(user, user.Password, request.Input.Password) != PasswordVerificationResult.Success)
+            if (user is null || _passwordHasher.VerifyHashedPassword(user, user.Password, request.Password) != PasswordVerificationResult.Success)
             {
                 throw new Exception("Invalid Credentials!");
             }
@@ -36,7 +36,7 @@ namespace CareerHub.Application.Features.Authentication.Commands.AuthenticateUse
             user.UpdateLastLogin();
             await _userRepository.UpdateAsync(user, cancellationToken);
 
-            return user.Adapt<UserResponse>();
+            return user;
         }
     }
 }

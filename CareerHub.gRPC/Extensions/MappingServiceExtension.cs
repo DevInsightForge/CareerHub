@@ -1,11 +1,11 @@
 ﻿using CareerHub.Domain.Entities.User;
-using CareerHub.Shared.Protos;
+using CareerHub.gRPC.Protos;
 using Google.Protobuf.WellKnownTypes;
 using Mapster;
 
-namespace CareerHub.Application.Configurations
+namespace CareerHub.gRPC.Extensions
 {
-    public static class MappingConfigurations
+    public static class MappingServiceExtension
     {
         public static void ConfigureMappings()
         {

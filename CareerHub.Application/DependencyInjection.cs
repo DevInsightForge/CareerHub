@@ -4,7 +4,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Identity;
 using MediatR;
 using CareerHub.Application.Behaviours;
-using CareerHub.Application.Configurations;
 using CareerHub.Domain.Entities.User;
 
 namespace CareerHub.Application
@@ -24,9 +23,6 @@ namespace CareerHub.Application
             // Inject and Configure Fluent Validation
             services.AddFluentValidationClientsideAdapters();
             services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly);
-
-            // Configure Mapster
-            MappingConfigurations.ConfigureMappings();
 
             // Inject password hasher
             services.AddScoped<IPasswordHasher<UserModel>, PasswordHasher<UserModel>>();

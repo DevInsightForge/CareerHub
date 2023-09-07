@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option csharp_namespace = "CareerHub.Shared.Protos";
+option csharp_namespace = "CareerHub.gRPC.Protos";
 
 package greet;
 

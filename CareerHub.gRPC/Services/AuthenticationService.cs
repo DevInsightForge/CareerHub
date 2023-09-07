@@ -1,7 +1,8 @@
 ﻿using CareerHub.Application.Features.Authentication.Commands.AuthenticateUser;
 using CareerHub.Application.Features.Authentication.Commands.RegisterUser;
-using CareerHub.Shared.Protos;
+using CareerHub.gRPC.Protos;
 using Grpc.Core;
+using Mapster;
 using MediatR;
 
 namespace CareerHub.gRPC.Services
@@ -13,14 +14,18 @@ namespace CareerHub.gRPC.Services
         {
             _sender = sender;
         }
-        public override async Task<UserResponse> RegisterUser(UserRegistrationRequest request, ServerCallContext context)
+        public override async Task<UserResponse> RegisterUser(UserRegistrationRequest registrationRequest, ServerCallContext context)
         {
-            return await _sender.Send(new RegisterUserCommand(request));
+            var request = registrationRequest.Adapt<RegisterUserCommand>();
+            var user = await _sender.Send(request);
+            return user.Adapt<UserResponse>();
         }
 
-        public override async Task<UserResponse> AuthenticateUser(UserLoginRequest request, ServerCallContext context)
+        public override async Task<UserResponse> AuthenticateUser(UserLoginRequest loginRequest, ServerCallContext context)
         {
-            return await _sender.Send(new AuthenticateUserCommand(request));
+            var request = loginRequest.Adapt<AuthenticateUserCommand>();
+            var user = await _sender.Send(request);
+            return user.Adapt<UserResponse>();
         }
     }
 }

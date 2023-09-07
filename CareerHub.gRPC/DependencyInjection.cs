@@ -12,6 +12,9 @@ namespace CareerHub.gRPC
             });
             services.AddGrpcReflection();
 
+            // Configure Mapster
+            MappingServiceExtension.ConfigureMappings();
+
             return services;
         }
     }

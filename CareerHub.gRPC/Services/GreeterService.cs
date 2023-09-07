@@ -1,4 +1,4 @@
-using CareerHub.Shared.Protos;
+using CareerHub.gRPC.Protos;
 using Grpc.Core;
 
 namespace CareerHub.gRPC.Services
