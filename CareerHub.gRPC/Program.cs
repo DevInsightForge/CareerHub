@@ -16,10 +16,8 @@ builder.Services.AddApplicationServices()
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
-    app.MapGrpcReflectionService();
-}
+app.MapGrpcReflectionService()
+    .AllowAnonymous();
 
 app.MapGrpcService<GreeterService>();
 app.MapGrpcService<AuthenticationService>();
