@@ -19,8 +19,10 @@ var app = builder.Build();
 app.MapGrpcReflectionService()
     .AllowAnonymous();
 
+app.MapGet("/", () => "Communication with gRPC endpoints must be made through a gRPC client.")
+    .AllowAnonymous();
+
 app.MapGrpcService<GreeterService>();
 app.MapGrpcService<AuthenticationService>();
-app.MapGet("/", () => "Communication with gRPC endpoints must be made through a gRPC client.");
 
 app.Run();
