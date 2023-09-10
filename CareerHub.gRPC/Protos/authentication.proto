@@ -7,8 +7,8 @@ package authentication;
 import "google/protobuf/timestamp.proto";
 
 service Authentication {
-	rpc AuthenticateUser(UserLoginRequest) returns (UserResponse);
-	rpc RegisterUser(UserRegistrationRequest) returns (UserResponse);
+	rpc AuthenticateUser(UserLoginRequest) returns (TokenResponse);
+	rpc RegisterUser(UserRegistrationRequest) returns (TokenResponse);
 }
 
 message UserLoginRequest {
@@ -31,6 +31,5 @@ message UserResponse {
 
 message TokenResponse {
   string access_token = 1;
-  int64 expires_in = 2;
-  string token_type = 3;
+  string refresh_token = 2;
 }

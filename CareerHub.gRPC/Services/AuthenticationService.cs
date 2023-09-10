@@ -4,9 +4,11 @@ using CareerHub.gRPC.Protos;
 using Grpc.Core;
 using Mapster;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CareerHub.gRPC.Services
 {
+    [AllowAnonymous]
     public class AuthenticationService : Authentication.AuthenticationBase
     {
         private readonly ISender _sender;
@@ -14,18 +16,18 @@ namespace CareerHub.gRPC.Services
         {
             _sender = sender;
         }
-        public override async Task<UserResponse> RegisterUser(UserRegistrationRequest registrationRequest, ServerCallContext context)
+        public override async Task<TokenResponse> RegisterUser(UserRegistrationRequest registrationRequest, ServerCallContext context)
         {
             var request = registrationRequest.Adapt<RegisterUserCommand>();
-            var user = await _sender.Send(request);
-            return user.Adapt<UserResponse>();
+            var token = await _sender.Send(request);
+            return token.Adapt<TokenResponse>();
         }
 
-        public override async Task<UserResponse> AuthenticateUser(UserLoginRequest loginRequest, ServerCallContext context)
+        public override async Task<TokenResponse> AuthenticateUser(UserLoginRequest loginRequest, ServerCallContext context)
         {
             var request = loginRequest.Adapt<AuthenticateUserCommand>();
-            var user = await _sender.Send(request);
-            return user.Adapt<UserResponse>();
+            var token = await _sender.Send(request);
+            return token.Adapt<TokenResponse>();
         }
     }
 }

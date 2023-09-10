@@ -3,9 +3,6 @@ using CareerHub.gRPC;
 using CareerHub.Infrastructure;
 using Serilog;
 using CareerHub.Application;
-using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
-using System.Net;
 
 var builder = WebApplication.CreateBuilder(args);
 
