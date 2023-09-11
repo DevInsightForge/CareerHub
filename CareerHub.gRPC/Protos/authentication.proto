@@ -5,31 +5,32 @@ option csharp_namespace = "CareerHub.gRPC.Protos";
 package authentication;
 
 import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
 
 service Authentication {
-	rpc AuthenticateUser(UserLoginRequest) returns (TokenResponse);
-	rpc RegisterUser(UserRegistrationRequest) returns (TokenResponse);
+    rpc RegisterUser(UserRegistrationRequest) returns (TokenResponse);
+    rpc AuthenticateUser(UserLoginRequest) returns (TokenResponse);
+    rpc GetTokenUserInfo(google.protobuf.Empty) returns (UserResponse);
 }
 
 message UserLoginRequest {
-  string email = 1;
-  string password = 2;
+    string email = 1;
+    string password = 2;
 }
 
 message UserRegistrationRequest {
-  string email = 1;
-  string password = 2;
+    string email = 1;
+    string password = 2;
 }
 
 message UserResponse {
-  string user_id = 1;
-  string email = 2;
-  bool is_email_verified = 3;
-  google.protobuf.Timestamp date_joined = 4;
-  google.protobuf.Timestamp last_login = 5;
+    string user_id = 1;
+    string email = 2;
+    bool is_email_verified = 3;
+    google.protobuf.Timestamp last_login = 5;
 }
 
 message TokenResponse {
-  string access_token = 1;
-  string refresh_token = 2;
+    string access_token = 1;
+    string refresh_token = 2;
 }

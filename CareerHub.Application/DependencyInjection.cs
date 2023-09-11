@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using MediatR;
 using CareerHub.Application.Behaviours;
 using CareerHub.Domain.Entities.User;
+using CareerHub.Application.Features.Common.Services;
 
 namespace CareerHub.Application
 {
@@ -26,6 +27,7 @@ namespace CareerHub.Application
 
             // Inject password hasher
             services.AddScoped<IPasswordHasher<UserModel>, PasswordHasher<UserModel>>();
+            services.AddScoped<TokenServices>();
 
             return services;
         }

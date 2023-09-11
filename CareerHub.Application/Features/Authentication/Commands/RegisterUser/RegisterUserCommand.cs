@@ -1,4 +1,5 @@
-﻿using CareerHub.Application.Features.Authentication.Common;
+﻿using CareerHub.Application.Features.Common.Services;
+using CareerHub.Application.Features.Common.ViewModels;
 using CareerHub.Application.Interfaces;
 using CareerHub.Domain.Entities.User;
 using MediatR;
@@ -7,7 +8,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace CareerHub.Application.Features.Authentication.Commands.RegisterUser
 {
-    public partial record RegisterUserCommand : IRequest<TokenModel>
+    public sealed record RegisterUserCommand : IRequest<TokenModel>
     {
         public string Email { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
@@ -17,16 +18,16 @@ namespace CareerHub.Application.Features.Authentication.Commands.RegisterUser
     {
         private readonly IGenericRepository<UserModel> _userRepository;
         private readonly IPasswordHasher<UserModel> _passwordHasher;
-        private readonly IConfiguration _configuration;
+        private readonly TokenServices _jwtService;
 
         public RegisterUserCommandHandler(
             IGenericRepository<UserModel> userRepository,
             IPasswordHasher<UserModel> passwordHasher,
-            IConfiguration configuration)
+            TokenServices jwtService)
         {
             _userRepository = userRepository;
             _passwordHasher = passwordHasher;
-            _configuration = configuration;
+            _jwtService = jwtService;
         }
 
         public async Task<TokenModel> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
@@ -43,7 +44,7 @@ namespace CareerHub.Application.Features.Authentication.Commands.RegisterUser
 
             TokenModel tokenModel = new()
             {
-                AccessToken= JwtService.GenerateJwtToken(user, _configuration)
+                AccessToken= _jwtService.GenerateJwtToken(user)
             };
 
             return tokenModel;

@@ -1,4 +1,5 @@
-﻿using CareerHub.Domain.Entities.User;
+﻿using CareerHub.Application.Features.Common.ViewModels;
+using CareerHub.Domain.Entities.User;
 using CareerHub.gRPC.Protos;
 using Google.Protobuf.WellKnownTypes;
 using Mapster;
@@ -18,6 +19,10 @@ namespace CareerHub.gRPC.Extensions
 
             // Specific Mappings
             TypeAdapterConfig<UserModel, UserResponse>
+                .NewConfig()
+                .Map(dest => dest.UserId, src => src.Id.Value);
+
+            TypeAdapterConfig<UserModel, TokenUserModel>
                 .NewConfig()
                 .Map(dest => dest.UserId, src => src.Id.Value);
         }
