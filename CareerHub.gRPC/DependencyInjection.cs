@@ -9,6 +9,9 @@ public static class DependencyInjection
         // Add Authentication
         services.AddAuthenticationService(configuration);
 
+        // Add CORS policy
+        services.AddCorsService();
+
         // Add services to the container.
         services.AddGrpc(options => {
             options.Interceptors.Add<ExceptionInterceptor>();

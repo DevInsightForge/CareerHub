@@ -11,8 +11,7 @@ public static class CorsServiceExtension
                     .SetIsOriginAllowed(origin => new Uri(origin).Host == "localhost")
                     .AllowAnyMethod()
                     .AllowAnyHeader()
-                    .AllowCredentials()
-                    .WithExposedHeaders("X-Access-Token"));
+                    .AllowCredentials());
         });
 
         return services;
