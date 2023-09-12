@@ -4,7 +4,6 @@ using CareerHub.Domain.Entities.User;
 using CareerHub.Domain.ViewModels;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
 
 namespace CareerHub.Application.Features.Authentication.Commands.RegisterUser
 {
@@ -32,11 +31,6 @@ namespace CareerHub.Application.Features.Authentication.Commands.RegisterUser
 
         public async Task<TokenModel> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
         {
-            UserModel? existingUser = await _userRepository.GetWhereAsync(u => u.NormalizedEmail == request.Email.ToUpperInvariant());
-
-            if (existingUser is not null)
-                throw new Exception($"User already exists with this email {request.Email}");
-
             UserModel user = UserModel.CreateUser(request.Email);
             user.SetPassword(_passwordHasher.HashPassword(user, request.Password));
 

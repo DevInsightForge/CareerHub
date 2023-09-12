@@ -35,7 +35,7 @@ namespace CareerHub.Application.Features.Authentication.Commands.AuthenticateUse
 
             if (user is null || _passwordHasher.VerifyHashedPassword(user, user.Password, request.Password) != PasswordVerificationResult.Success)
             {
-                throw new Exception("Invalid Credentials!");
+                throw new UnauthorizedAccessException("Invalid Credentials.");
             }
 
             user.UpdateLastLogin();
