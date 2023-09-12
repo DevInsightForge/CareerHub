@@ -5,14 +5,15 @@ using Serilog;
 using CareerHub.Application;
 
 var builder = WebApplication.CreateBuilder(args);
+var configuration = builder.Configuration;
 
 // Add Serilog to container
 builder.Host.UseSerilog((context, configuration) =>
     configuration.ReadFrom.Configuration(context.Configuration));
 
-builder.Services.AddApplicationServices()
-    .AddgRPCServices(builder.Configuration)
-    .AddInfrastructureServices(builder.Configuration);
+builder.Services.AddApplicationServices(configuration)
+    .AddgRPCServices(configuration)
+    .AddInfrastructureServices(configuration);
 
 var app = builder.Build();
 

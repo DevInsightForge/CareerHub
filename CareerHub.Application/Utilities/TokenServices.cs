@@ -1,6 +1,7 @@
-﻿using CareerHub.Domain.Entities.User;
+﻿using CareerHub.Application.Configurations;
+using CareerHub.Domain.Entities.User;
 using CareerHub.Domain.ViewModels;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -10,31 +11,17 @@ namespace CareerHub.Application.Utilities
 {
     public class TokenServices
     {
+        private readonly JwtSettings _jwtSettings;
+
         // Constants for claim types
         private const string ClaimTypeUserId = ClaimTypes.NameIdentifier;
         private const string ClaimTypeEmail = ClaimTypes.Email;
         private const string ClaimTypeEmailVerified = ClaimTypes.AuthorizationDecision;
         private const string ClaimTypeLastLogin = ClaimTypes.Expiration;
 
-        // Configuration keys
-        private const string JwtSecretKeyConfigKey = "JwtSettings:SecretKey";
-        private const string JwtIssuerConfigKey = "JwtSettings:ValidIssuer";
-        private const string JwtAudienceConfigKey = "JwtSettings:ValidAudience";
-        private const string JwtAccessTokenExpirationConfigKey = "JwtSettings:AccessTokenExpirationInMinutes";
-
-        private readonly string _jwtSecretKey;
-        private readonly string _jwtIssuer;
-        private readonly string _jwtAudience;
-        private readonly double _jwtAccessTokenExpirationInMinutes;
-
-        public TokenServices(IConfiguration configuration)
+        public TokenServices(IOptions<JwtSettings> jwtSettings)
         {
-            ArgumentNullException.ThrowIfNull(configuration, nameof(configuration));
-
-            _jwtSecretKey = configuration[JwtSecretKeyConfigKey] ?? "Default_Super_Secret_256_Bits_Signing_Key";
-            _jwtIssuer = configuration[JwtIssuerConfigKey] ?? "DefaultIssuer";
-            _jwtAudience = configuration[JwtAudienceConfigKey] ?? "DefaultAudience";
-            _jwtAccessTokenExpirationInMinutes = configuration.GetValue<double>(JwtAccessTokenExpirationConfigKey, 60);
+            _jwtSettings = jwtSettings.Value;
         }
 
         public string GenerateJwtToken(UserModel user)
@@ -49,12 +36,12 @@ namespace CareerHub.Application.Utilities
                 new Claim(ClaimTypeLastLogin, user.LastLogin.ToString("yyyy-MM-dd'T'HH:mm:ss.fffZ"), ClaimValueTypes.DateTime)
             };
 
-            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSecretKey));
+            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.SecretKey));
 
             var securityToken = new JwtSecurityToken(
-                issuer: _jwtIssuer,
-                audience: _jwtAudience,
-                expires: DateTime.UtcNow.AddMinutes(_jwtAccessTokenExpirationInMinutes),
+                issuer: _jwtSettings.ValidIssuer,
+                audience: _jwtSettings.ValidAudience,
+                expires: DateTime.UtcNow.AddMinutes(_jwtSettings.AccessTokenExpirationInMinutes),
                 claims: authClaims,
                 signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
             );

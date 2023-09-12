@@ -2,7 +2,6 @@
 using CareerHub.Domain.ViewModels;
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using System.Security.Claims;
 
 namespace CareerHub.Application.Features.Authentication.Queries.GetTokenUserInfo
 {
@@ -16,7 +15,6 @@ namespace CareerHub.Application.Features.Authentication.Queries.GetTokenUserInfo
         {
             _contextAccessor = contextAccessor;
             _jwtService = jwtService;
-
         }
 
         public Task<TokenUserModel> Handle(GetTokenUserInfoQuery request, CancellationToken cancellationToken)
