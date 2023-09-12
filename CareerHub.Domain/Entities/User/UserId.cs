@@ -1,4 +1,3 @@
-﻿namespace CareerHub.Domain.Entities.User
-{
-    public record UserId(Guid Value);
-}
+﻿namespace CareerHub.Domain.Entities.User;
+
+public record UserId(Guid Value);

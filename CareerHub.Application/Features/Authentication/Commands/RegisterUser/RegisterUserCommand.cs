@@ -5,43 +5,42 @@ using CareerHub.Domain.ViewModels;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 
-namespace CareerHub.Application.Features.Authentication.Commands.RegisterUser
+namespace CareerHub.Application.Features.Authentication.Commands.RegisterUser;
+
+public sealed record RegisterUserCommand : IRequest<TokenModel>
 {
-    public sealed record RegisterUserCommand : IRequest<TokenModel>
+    public string Email { get; set; } = string.Empty;
+    public string Password { get; set; } = string.Empty;
+}
+
+internal sealed class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, TokenModel>
+{
+    private readonly IGenericRepository<UserModel> _userRepository;
+    private readonly IPasswordHasher<UserModel> _passwordHasher;
+    private readonly TokenServices _jwtService;
+
+    public RegisterUserCommandHandler(
+        IGenericRepository<UserModel> userRepository,
+        IPasswordHasher<UserModel> passwordHasher,
+        TokenServices jwtService)
     {
-        public string Email { get; set; } = string.Empty;
-        public string Password { get; set; } = string.Empty;
+        _userRepository = userRepository;
+        _passwordHasher = passwordHasher;
+        _jwtService = jwtService;
     }
 
-    internal sealed class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, TokenModel>
+    public async Task<TokenModel> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
     {
-        private readonly IGenericRepository<UserModel> _userRepository;
-        private readonly IPasswordHasher<UserModel> _passwordHasher;
-        private readonly TokenServices _jwtService;
+        UserModel user = UserModel.CreateUser(request.Email);
+        user.SetPassword(_passwordHasher.HashPassword(user, request.Password));
 
-        public RegisterUserCommandHandler(
-            IGenericRepository<UserModel> userRepository,
-            IPasswordHasher<UserModel> passwordHasher,
-            TokenServices jwtService)
+        await _userRepository.AddAsync(user, cancellationToken);
+
+        TokenModel tokenModel = new()
         {
-            _userRepository = userRepository;
-            _passwordHasher = passwordHasher;
-            _jwtService = jwtService;
-        }
+            AccessToken= _jwtService.GenerateJwtToken(user)
+        };
 
-        public async Task<TokenModel> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
-        {
-            UserModel user = UserModel.CreateUser(request.Email);
-            user.SetPassword(_passwordHasher.HashPassword(user, request.Password));
-
-            await _userRepository.AddAsync(user, cancellationToken);
-
-            TokenModel tokenModel = new()
-            {
-                AccessToken= _jwtService.GenerateJwtToken(user)
-            };
-
-            return tokenModel;
-        }
+        return tokenModel;
     }
 }

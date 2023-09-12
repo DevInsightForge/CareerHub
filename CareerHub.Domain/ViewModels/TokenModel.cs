@@ -1,9 +1,8 @@
-﻿namespace CareerHub.Domain.ViewModels
-{
-    public class TokenModel
-    {
-        public string AccessToken { get; set; } = string.Empty;
+﻿namespace CareerHub.Domain.ViewModels;
 
-        public string RefreshToken { get; set; } = string.Empty;
-    }
+public class TokenModel
+{
+    public string AccessToken { get; set; } = string.Empty;
+
+    public string RefreshToken { get; set; } = string.Empty;
 }

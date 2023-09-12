@@ -1,26 +1,25 @@
-﻿namespace CareerHub.Domain.Extensions
+﻿namespace CareerHub.Domain.Extensions;
+
+public static class DateTimeExtensions
 {
-    public static class DateTimeExtensions
+    private static readonly TimeZoneInfo TimeZoneBangladesh = FindTimeZone("Asia/Dhaka");
+
+    private static TimeZoneInfo FindTimeZone(string timeZoneId)
     {
-        private static readonly TimeZoneInfo TimeZoneBangladesh = FindTimeZone("Asia/Dhaka");
-
-        private static TimeZoneInfo FindTimeZone(string timeZoneId)
+        try
         {
-            try
-            {
-                return TimeZoneInfo.FindSystemTimeZoneById(timeZoneId);
-            }
-            catch (TimeZoneNotFoundException)
-            {
-                throw new Exception($"Time zone '{timeZoneId}' not found.");
-            }
+            return TimeZoneInfo.FindSystemTimeZoneById(timeZoneId);
         }
-
-        public static DateTime ToBangladeshTime(this DateTime value)
+        catch (TimeZoneNotFoundException)
         {
-            DateTimeOffset dateTimeOffsetValue = new(value, TimeSpan.Zero);
-            DateTimeOffset convertedOffset = TimeZoneInfo.ConvertTime(dateTimeOffsetValue, TimeZoneBangladesh);
-            return convertedOffset.DateTime.ToUniversalTime();
+            throw new Exception($"Time zone '{timeZoneId}' not found.");
         }
+    }
+
+    public static DateTime ToBangladeshTime(this DateTime value)
+    {
+        DateTimeOffset dateTimeOffsetValue = new(value, TimeSpan.Zero);
+        DateTimeOffset convertedOffset = TimeZoneInfo.ConvertTime(dateTimeOffsetValue, TimeZoneBangladesh);
+        return convertedOffset.DateTime.ToUniversalTime();
     }
 }

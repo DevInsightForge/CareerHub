@@ -1,61 +1,60 @@
 ﻿using CareerHub.Domain.Entities.Common;
 using CareerHub.Domain.Extensions;
 
-namespace CareerHub.Domain.Entities.User
+namespace CareerHub.Domain.Entities.User;
+
+public class UserModel : BaseEntity
 {
-    public class UserModel : BaseEntity
+    public UserId Id { get; private set; } = new(Guid.NewGuid());
+    public string Email { get; private set; } = string.Empty;
+    public string NormalizedEmail { get; private set; } = string.Empty;
+    public string Password { get; private set; } = string.Empty;
+    public bool IsEmailVerified { get; private set; } = false;
+    public DateTimeOffset DateJoined { get; private set; }
+    public DateTimeOffset LastLogin { get; private set; }
+
+    // Private constructor
+    private UserModel()
     {
-        public UserId Id { get; private set; } = new(Guid.NewGuid());
-        public string Email { get; private set; } = string.Empty;
-        public string NormalizedEmail { get; private set; } = string.Empty;
-        public string Password { get; private set; } = string.Empty;
-        public bool IsEmailVerified { get; private set; } = false;
-        public DateTimeOffset DateJoined { get; private set; }
-        public DateTimeOffset LastLogin { get; private set; }
+        DateJoined = DateTime.UtcNow.ToBangladeshTime();
+        LastLogin = DateJoined;
+    }
 
-        // Private constructor
-        private UserModel()
+    // Factory method
+    public static UserModel CreateUser(string email)
+    {
+        if (string.IsNullOrEmpty(email))
         {
-            DateJoined = DateTime.UtcNow.ToBangladeshTime();
-            LastLogin = DateJoined;
+            throw new ArgumentException("Email cannot be null or empty.", nameof(email));
         }
 
-        // Factory method
-        public static UserModel CreateUser(string email)
+        var newUser = new UserModel
         {
-            if (string.IsNullOrEmpty(email))
-            {
-                throw new ArgumentException("Email cannot be null or empty.", nameof(email));
-            }
+            Email = email,
+            NormalizedEmail = email.ToUpperInvariant(),
+        };
 
-            var newUser = new UserModel
-            {
-                Email = email,
-                NormalizedEmail = email.ToUpperInvariant(),
-            };
+        return newUser;
+    }
 
-            return newUser;
-        }
+    public void SetEmail(string email)
+    {
+        Email = email;
+        NormalizedEmail = email.ToUpperInvariant();
+    }
 
-        public void SetEmail(string email)
-        {
-            Email = email;
-            NormalizedEmail = email.ToUpperInvariant();
-        }
+    public void SetPassword(string password)
+    {
+        Password = password;
+    }
 
-        public void SetPassword(string password)
-        {
-            Password = password;
-        }
+    public void MarkEmailAsVerified()
+    {
+        IsEmailVerified = true;
+    }
 
-        public void MarkEmailAsVerified()
-        {
-            IsEmailVerified = true;
-        }
-
-        public void UpdateLastLogin()
-        {
-            LastLogin = DateTime.UtcNow.ToBangladeshTime();
-        }
+    public void UpdateLastLogin()
+    {
+        LastLogin = DateTime.UtcNow.ToBangladeshTime();
     }
 }

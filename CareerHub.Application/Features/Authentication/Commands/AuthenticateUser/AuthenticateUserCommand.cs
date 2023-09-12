@@ -2,51 +2,53 @@
 using CareerHub.Application.Utilities;
 using CareerHub.Domain.Entities.User;
 using CareerHub.Domain.ViewModels;
+using Mapster;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 
-namespace CareerHub.Application.Features.Authentication.Commands.AuthenticateUser
+namespace CareerHub.Application.Features.Authentication.Commands.AuthenticateUser;
+
+public sealed record AuthenticateUserCommand : IRequest<TokenModel>
 {
-    public sealed record AuthenticateUserCommand : IRequest<TokenModel>
+    public string Email { get; set; } = string.Empty;
+    public string Password { get; set; } = string.Empty;
+}
+
+internal sealed class AuthenticateUserCommandHandler : IRequestHandler<AuthenticateUserCommand, TokenModel>
+{
+    private readonly IGenericRepository<UserModel> _userRepository;
+    private readonly IPasswordHasher<UserModel> _passwordHasher;
+    private readonly TokenServices _jwtService;
+
+    public AuthenticateUserCommandHandler(
+        IGenericRepository<UserModel> userRepository,
+        IPasswordHasher<UserModel> passwordHasher,
+        TokenServices jwtService)
     {
-        public string Email { get; set; } = string.Empty;
-        public string Password { get; set; } = string.Empty;
+        _userRepository = userRepository;
+        _passwordHasher = passwordHasher;
+        _jwtService = jwtService;
     }
 
-    internal sealed class AuthenticateUserCommandHandler : IRequestHandler<AuthenticateUserCommand, TokenModel>
+    public async Task<TokenModel> Handle(AuthenticateUserCommand request, CancellationToken cancellationToken)
     {
-        private readonly IGenericRepository<UserModel> _userRepository;
-        private readonly IPasswordHasher<UserModel> _passwordHasher;
-        private readonly TokenServices _jwtService;
+        UserModel? user = await _userRepository.GetWhereAsync(u => u.NormalizedEmail == request.Email.ToUpperInvariant());
 
-        public AuthenticateUserCommandHandler(
-            IGenericRepository<UserModel> userRepository,
-            IPasswordHasher<UserModel> passwordHasher,
-            TokenServices jwtService)
+        if (user is null || _passwordHasher.VerifyHashedPassword(user, user.Password, request.Password) != PasswordVerificationResult.Success)
         {
-            _userRepository = userRepository;
-            _passwordHasher = passwordHasher;
-            _jwtService = jwtService;
+            throw new UnauthorizedAccessException("Invalid Credentials.");
         }
 
-        public async Task<TokenModel> Handle(AuthenticateUserCommand request, CancellationToken cancellationToken)
+        user.UpdateLastLogin();
+        await _userRepository.UpdateAsync(user, cancellationToken);
+
+        var tokenUser = user.Adapt<TokenUserModel>();
+
+        TokenModel tokenModel = new()
         {
-            UserModel? user = await _userRepository.GetWhereAsync(u => u.NormalizedEmail == request.Email.ToUpperInvariant());
+            AccessToken = _jwtService.GenerateJwtToken(user)
+        };
 
-            if (user is null || _passwordHasher.VerifyHashedPassword(user, user.Password, request.Password) != PasswordVerificationResult.Success)
-            {
-                throw new UnauthorizedAccessException("Invalid Credentials.");
-            }
-
-            user.UpdateLastLogin();
-            await _userRepository.UpdateAsync(user, cancellationToken);
-
-            TokenModel tokenModel = new()
-            {
-                AccessToken = _jwtService.GenerateJwtToken(user)
-            };
-
-            return tokenModel;
-        }
+        return tokenModel;
     }
 }

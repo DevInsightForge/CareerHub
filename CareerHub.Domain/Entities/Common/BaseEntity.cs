@@ -1,6 +1,5 @@
-﻿namespace CareerHub.Domain.Entities.Common
+﻿namespace CareerHub.Domain.Entities.Common;
+
+public abstract class BaseEntity
 {
-    public abstract class BaseEntity
-    {
-    }
 }

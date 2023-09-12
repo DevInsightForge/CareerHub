@@ -9,32 +9,31 @@ using CareerHub.Application.Utilities;
 using Microsoft.Extensions.Configuration;
 using CareerHub.Application.Configurations;
 
-namespace CareerHub.Application
+namespace CareerHub.Application;
+
+public static class DependencyInjection
 {
-    public static class DependencyInjection
+    public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration configuration)
     {
-        public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration configuration)
+        // Inject and Configure Mediatr
+        services.AddMediatR(cfg =>
         {
-            // Inject and Configure Mediatr
-            services.AddMediatR(cfg =>
-            {
-                cfg.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly);
-                cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
-                cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(PerformanceBehaviour<,>));
-            });
+            cfg.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly);
+            cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
+            cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(PerformanceBehaviour<,>));
+        });
 
-            // Inject and Configure Fluent Validation
-            services.AddFluentValidationClientsideAdapters();
-            services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly);
+        // Inject and Configure Fluent Validation
+        services.AddFluentValidationClientsideAdapters();
+        services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly);
 
-            // Inject Configuration Models
-            services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
+        // Inject Configuration Models
+        services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
 
-            // Inject password hasher
-            services.AddScoped<IPasswordHasher<UserModel>, PasswordHasher<UserModel>>();
-            services.AddScoped<TokenServices>();
+        // Inject password hasher
+        services.AddScoped<IPasswordHasher<UserModel>, PasswordHasher<UserModel>>();
+        services.AddScoped<TokenServices>();
 
-            return services;
-        }
+        return services;
     }
 }
