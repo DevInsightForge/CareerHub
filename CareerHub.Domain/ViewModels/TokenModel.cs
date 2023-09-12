@@ -1,4 +1,4 @@
-﻿namespace CareerHub.Application.Features.Common.ViewModels
+﻿namespace CareerHub.Domain.ViewModels
 {
     public class TokenModel
     {

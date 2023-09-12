@@ -1,5 +1,5 @@
-﻿using CareerHub.Application.Features.Common.ViewModels;
-using CareerHub.Domain.Entities.User;
+﻿using CareerHub.Domain.Entities.User;
+using CareerHub.Domain.ViewModels;
 using CareerHub.gRPC.Protos;
 using Google.Protobuf.WellKnownTypes;
 using Mapster;

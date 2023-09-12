@@ -1,5 +1,5 @@
-﻿using CareerHub.Application.Features.Common.Services;
-using CareerHub.Application.Features.Common.ViewModels;
+﻿using CareerHub.Application.Utilities;
+using CareerHub.Domain.ViewModels;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;

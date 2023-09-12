@@ -1,12 +1,12 @@
-﻿using CareerHub.Application.Features.Common.ViewModels;
-using CareerHub.Domain.Entities.User;
+﻿using CareerHub.Domain.Entities.User;
+using CareerHub.Domain.ViewModels;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace CareerHub.Application.Features.Common.Services
+namespace CareerHub.Application.Utilities
 {
     public class TokenServices
     {

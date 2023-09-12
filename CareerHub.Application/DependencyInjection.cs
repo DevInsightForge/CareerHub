@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using MediatR;
 using CareerHub.Application.Behaviours;
 using CareerHub.Domain.Entities.User;
-using CareerHub.Application.Features.Common.Services;
+using CareerHub.Application.Utilities;
 
 namespace CareerHub.Application
 {
