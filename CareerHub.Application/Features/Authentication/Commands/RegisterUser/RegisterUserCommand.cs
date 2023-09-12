@@ -17,12 +17,12 @@ internal sealed class RegisterUserCommandHandler : IRequestHandler<RegisterUserC
 {
     private readonly IGenericRepository<UserModel> _userRepository;
     private readonly IPasswordHasher<UserModel> _passwordHasher;
-    private readonly TokenServices _jwtService;
+    private readonly TokenUtilities _jwtService;
 
     public RegisterUserCommandHandler(
         IGenericRepository<UserModel> userRepository,
         IPasswordHasher<UserModel> passwordHasher,
-        TokenServices jwtService)
+        TokenUtilities jwtService)
     {
         _userRepository = userRepository;
         _passwordHasher = passwordHasher;

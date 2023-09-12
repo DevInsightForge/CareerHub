@@ -113,9 +113,9 @@ public class ExceptionInterceptor : Interceptor
     private static Metadata CreateTrailers(Exception exception, string correlationId)
     {
         var trailers = new Metadata
-            {
-                { "CorrelationId", correlationId }
-            };
+        {
+            { "CorrelationId", correlationId }
+        };
 
         if (exception is ValidationException validationException)
         {

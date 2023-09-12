@@ -10,7 +10,7 @@ using System.Text;
 
 namespace CareerHub.Application.Utilities;
 
-public class TokenServices
+public class TokenUtilities
 {
     private readonly JwtSettings _jwtSettings;
     private readonly IHttpContextAccessor _contextAccessor;
@@ -21,7 +21,7 @@ public class TokenServices
     private const string ClaimTypeEmailVerified = ClaimTypes.AuthorizationDecision;
     private const string ClaimTypeLastLogin = ClaimTypes.Expiration;
 
-    public TokenServices(IOptions<JwtSettings> jwtSettings, IHttpContextAccessor contextAccessor)
+    public TokenUtilities(IOptions<JwtSettings> jwtSettings, IHttpContextAccessor contextAccessor)
     {
         _jwtSettings = jwtSettings.Value;
         _contextAccessor = contextAccessor;
@@ -29,7 +29,7 @@ public class TokenServices
 
     public string GenerateJwtToken(UserModel user)
     {
-        if (user == null) throw new ArgumentNullException(nameof(user));
+        if (user is null) throw new ArgumentNullException(nameof(user));
 
         var authClaims = new List<Claim>
         {

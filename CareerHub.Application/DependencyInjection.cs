@@ -32,7 +32,7 @@ public static class DependencyInjection
 
         // Inject password hasher
         services.AddScoped<IPasswordHasher<UserModel>, PasswordHasher<UserModel>>();
-        services.AddScoped<TokenServices>();
+        services.AddScoped<TokenUtilities>();
 
         return services;
     }

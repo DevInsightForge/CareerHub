@@ -18,12 +18,12 @@ internal sealed class AuthenticateUserCommandHandler : IRequestHandler<Authentic
 {
     private readonly IGenericRepository<UserModel> _userRepository;
     private readonly IPasswordHasher<UserModel> _passwordHasher;
-    private readonly TokenServices _jwtService;
+    private readonly TokenUtilities _jwtService;
 
     public AuthenticateUserCommandHandler(
         IGenericRepository<UserModel> userRepository,
         IPasswordHasher<UserModel> passwordHasher,
-        TokenServices jwtService)
+        TokenUtilities jwtService)
     {
         _userRepository = userRepository;
         _passwordHasher = passwordHasher;

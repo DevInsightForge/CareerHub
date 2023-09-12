@@ -8,8 +8,8 @@ public sealed record GetTokenUserInfoQuery : IRequest<TokenUserModel> {}
 
 internal sealed class GetTokenUserInfoQueryHandler : IRequestHandler<GetTokenUserInfoQuery, TokenUserModel>
 {
-    private readonly TokenServices _tokenService;
-    public GetTokenUserInfoQueryHandler(TokenServices tokenServices)
+    private readonly TokenUtilities _tokenService;
+    public GetTokenUserInfoQueryHandler(TokenUtilities tokenServices)
     {
         _tokenService = tokenServices;
     }
