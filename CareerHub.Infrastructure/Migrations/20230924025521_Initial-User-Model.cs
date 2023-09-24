@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace CareerHub.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class Initialmigration : Migration
+    public partial class InitialUserModel : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -15,13 +15,13 @@ namespace CareerHub.Infrastructure.Migrations
                 name: "Users",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Email = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
-                    NormalizedEmail = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
-                    Password = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
-                    IsEmailVerified = table.Column<bool>(type: "boolean", nullable: false),
-                    DateJoined = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
-                    LastLogin = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false)
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Email = table.Column<string>(type: "TEXT", maxLength: 255, nullable: false),
+                    NormalizedEmail = table.Column<string>(type: "TEXT", maxLength: 255, nullable: false),
+                    Password = table.Column<string>(type: "TEXT", maxLength: 255, nullable: false),
+                    IsEmailVerified = table.Column<bool>(type: "INTEGER", nullable: false),
+                    DateJoined = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
+                    LastLogin = table.Column<DateTimeOffset>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {

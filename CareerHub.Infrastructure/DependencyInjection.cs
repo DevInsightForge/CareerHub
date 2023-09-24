@@ -13,7 +13,7 @@ public static class DependencyInjection
     {
         // Configure DbContext with SQLite provider
         services.AddDbContext<DatabaseContext>(options =>
-            options.UseNpgsql(configuration.GetConnectionString("DatabaseConnection")));
+            options.UseSqlite(configuration.GetConnectionString("SqliteDatabase")));
 
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
